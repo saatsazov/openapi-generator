@@ -6,6 +6,10 @@
 
 {{>partials/api_statement_class_name}}
 
+# Default interceptor for success & fail calls
+func _defaultLog(result):
+	print("API result:", result)
+
 {{#with operations}}
 {{#each operation}}
 
@@ -30,8 +34,8 @@ func {{operationIdSnakeCase}}(
 	# {{{description}}}
 	{{paramName}}{{#if required}}{{#if dataType}}: {{{dataType}}}{{/if}}{{/if}}{{#unless required}} = {{#if defaultValue}}{{{defaultValue}}}{{/if}}{{#unless defaultValue}}null{{/unless}}{{/unless}},
 	{{/each}}
-	on_success: Callable = Callable(),  # func(result{{#if returnType}}: {{returnType}}{{/if}})
-	on_failure: Callable = Callable(),  # func(error: {{>partials/api_error_class_name}})
+	on_success: Callable = Callable(self, "_defaultLog"),  # func(result{{#if returnType}}: {{returnType}}{{/if}})
+	on_failure: Callable = Callable(self, "_defaultLog"),  # func(error: {{>partials/api_error_class_name}})
 ):
 	{{!--
 	# Note: `bzz_` prefix in variable names is to reduce collisions and therefore renames.
