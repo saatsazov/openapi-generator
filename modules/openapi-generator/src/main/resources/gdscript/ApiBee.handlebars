@@ -106,7 +106,6 @@ func bee_connect_client_if_needed(
 		self.bee_config.log_debug("Connecting…")
 		if self.bee_config.polling_interval_ms:
 			OS.delay_msec(self.bee_config.polling_interval_ms)
-		await bee_next_loop_iteration()
 
 	if self.bee_client.get_status() != HTTPClient.STATUS_CONNECTED:
 		var error := {{>partials/api_error_class_name}}.new()
@@ -263,7 +262,6 @@ func bee_do_request_text(
 		self.bee_config.log_debug("Requesting…")
 		if self.bee_config.polling_interval_ms:
 			OS.delay_msec(self.bee_config.polling_interval_ms)
-		await bee_next_loop_iteration()
 #		if OS.has_feature("web") or async:
 
 	if not self.bee_client.has_response():
@@ -293,7 +291,6 @@ func bee_do_request_text(
 		if chunk.size() == 0:  # Got nothing, wait for buffers to fill a bit.
 			if self.bee_config.polling_interval_ms:
 				OS.delay_usec(self.bee_config.polling_interval_ms)
-			await bee_next_loop_iteration()
 		else:  # Yummy data has arrived
 			response_bytes = response_bytes + chunk
 
