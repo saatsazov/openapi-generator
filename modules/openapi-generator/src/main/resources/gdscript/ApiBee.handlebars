@@ -185,13 +185,15 @@ func bee_request_text(
 	on_success: Callable,  # func(responseText: String, responseCode: int, responseHeaders: Dictionary)
 	on_failure: Callable,  # func(error: {{>partials/api_error_class_name}})
 ):
-	bee_connect_client_if_needed(
-		func():
-			bee_do_request_text(method, path, headers, query, body, on_success, on_failure)
-			,
-		func(error):
-			on_failure.call(error)
-			,
+	TaskManager.async(func():
+		bee_connect_client_if_needed(
+			func():
+				bee_do_request_text(method, path, headers, query, body, on_success, on_failure)
+				,
+			func(error):
+				on_failure.call(error)
+				,
+		)
 	)
 
 
