@@ -8,6 +8,11 @@ class_name {{>partials/api_base_class_name}}
 # We want to keep the amount of renaming to a minimum, though.
 # Therefore, we use the bee_ prefix, even if awkward.
 
+# Default interceptor for success & fail calls
+func _defaultLog(result):
+	pass
+	# print("API result:", result)
+
 
 const BEE_CONTENT_TYPE_TEXT := "text/plain"
 const BEE_CONTENT_TYPE_HTML := "text/html"
