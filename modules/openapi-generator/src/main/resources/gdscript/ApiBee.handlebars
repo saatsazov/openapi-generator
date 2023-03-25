@@ -324,7 +324,7 @@ func bee_do_request_text(
 		response_text = response_bytes.get_string_from_ascii()
 
 	if response_text:
-		self.bee_config.log_debug("→ BODY: \n%s" % response_text)
+		self.bee_config.log_info("→ BODY: %s" % response_text)
 
 	if response_code >= 500:
 		var error := {{>partials/api_error_class_name}}.new()
