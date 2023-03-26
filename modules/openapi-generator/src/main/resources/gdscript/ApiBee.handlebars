@@ -69,12 +69,14 @@ func bee_next_loop_iteration():
 	# I can't find `idle_frame` in 4-beta3, but we probably want idle_frame here
 	return Engine.get_main_loop().process_frame
 
+var mutex: Mutex = Mutex.new()
 
 func bee_connect_client_if_needed(
 	on_success: Callable,  # func()
 	on_failure: Callable,  # func(error: {{>partials/api_error_class_name}})
 	#finally: Callable,
 ):
+	mutex.lock()
 	if (
 		self.bee_client.get_status() == HTTPClient.STATUS_CONNECTED
 		or
@@ -86,7 +88,9 @@ func bee_connect_client_if_needed(
 		or
 		self.bee_client.get_status() == HTTPClient.STATUS_BODY
 	):
+		mutex.unlock()
 		on_success.call()
+		# todo: should a return be here?
 
 	var connecting := self.bee_client.connect_to_host(
 		self.bee_config.host, self.bee_config.port
@@ -98,6 +102,7 @@ func bee_connect_client_if_needed(
 		error.message = "%s: failed to connect to `%s' port %d with error %d" % [
 			self.bee_name, self.bee_config.host, self.bee_config.port, connecting
 		]
+		mutex.unlock()
 		on_failure.call(error)
 		return
 
@@ -119,9 +124,11 @@ func bee_connect_client_if_needed(
 		error.message = "%s: failed to connect to `%s' port %d, with client status %d" % [
 			self.bee_name, self.bee_config.host, self.bee_config.port, self.bee_client.get_status()
 		]
+		mutex.unlock()
 		on_failure.call(error)
 		return
 
+	mutex.unlock()
 	on_success.call()
 
 
