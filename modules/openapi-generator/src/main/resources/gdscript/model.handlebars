@@ -1,22 +1,10 @@
-{{>partials/api_headers}}
-
 {{#each models}}
 {{#with model}}
-
-# {{classname}} Model
-{{#if description}}
-# {{{description}}}
-{{/if}}
-# namespace: {{modelPackage}}
-
 {{>partials/model_statement_extends}}
-
 {{>partials/model_statement_class_name}}
 
 
-# It's convenient to know the class name, for error messages.
-# https://github.com/godotengine/godot/issues/21789
-var bee_class_name := "{{classname}}"
+{{>partials/model_headers}}
 
 
 {{#each vars}}
@@ -24,14 +12,14 @@ var bee_class_name := "{{classname}}"
 # /!.  DEPRECATED
 {{/if}}
 {{#if description}}
+{{! FIXME: multiline description (how?) }}
 # {{{description}}}
 {{/if}}
-# Type: {{>partials/data_type}}
 {{#if isDate}}
-#       (but it's actually a Date ; no generated conversion because of lack of support for timezones in Godot)
+#       (but it's actually a Date ; no timezones support in Gdscript)
 {{/if}}
 {{#if isDateTime}}
-#       (but it's actually a DateTime ; no generated conversion because of lack of support for timezones in Godot)
+#       (but it's actually a DateTime ; no timezones support in Gdscript)
 {{/if}}
 # Required: {{#unless required}}False{{/unless}}{{#if required}}True{{/if}}
 {{#if example}}
@@ -49,7 +37,7 @@ var bee_class_name := "{{classname}}"
 {{/if}}
 {{#if isEnum}}
 		if str(value) != "" and not (str(value) in __{{name}}__allowable__values):
-			printerr("{{classname}}: tried to set property `{{name}}` to a value that is not allowed." +
+			push_error("{{classname}}: tried to set property `{{name}}` to a value that is not allowed." +
 				"  Allowed values: {{#with allowableValues}}{{#each values}}`{{this}}`{{#unless @last}}, {{/unless}}{{/each}}{{/with}}")
 			return
 {{/if}}
@@ -66,7 +54,7 @@ var __{{name}}__allowable__values := [
 
 {{/each}}
 
-func bee_collect_missing_properties() -> Array:
+func bzz_collect_missing_properties() -> Array:
 	var bzz_missing_properties := Array()
 {{#each vars}}
 {{#if required}}
@@ -77,7 +65,7 @@ func bee_collect_missing_properties() -> Array:
 	return bzz_missing_properties
 
 
-func bee_normalize() -> Dictionary:
+func bzz_normalize() -> Dictionary:
 	var bzz_dictionary := Dictionary()
 {{#each vars}}
 	if self.__{{name}}__was__set:
@@ -88,15 +76,15 @@ func bee_normalize() -> Dictionary:
 
 # Won't work for JSON+LD
 {{!-- LEAKING if we specify return -> {{classname}} in func def --}}
-static func bee_denormalize_single(from_dict: Dictionary):
+static func bzz_denormalize_single(from_dict: Dictionary):
 	var me := new()
 {{#each vars}}
 	if from_dict.has("{{name}}"):
 	{{#if isModel}}
-		me.{{name}} = {{>partials/complex_type}}.bee_denormalize_single(from_dict["{{name}}"])
+		me.{{name}} = {{>partials/complex_type}}.bzz_denormalize_single(from_dict["{{name}}"])
 	{{else if isArray}}
 		{{#if mostInnerItems.isModel}}
-		me.{{name}} = {{>partials/complex_type}}.bee_denormalize_multiple(from_dict["{{name}}"])
+		me.{{name}} = {{>partials/complex_type}}.bzz_denormalize_multiple(from_dict["{{name}}"])
 		{{else}}
 		me.{{name}} = from_dict["{{name}}"]
 		{{/if}}
@@ -109,20 +97,20 @@ static func bee_denormalize_single(from_dict: Dictionary):
 
 # Won't work for JSON+LD
 {{!-- LEAKING if we specify return -> {{classname}} in func def --}}
-static func bee_denormalize_multiple(from_array: Array):
+static func bzz_denormalize_multiple(from_array: Array):
 	var mes := Array()
 	for element in from_array:
 		if element is Array:
-			mes.append(bee_denormalize_multiple(element))
+			mes.append(bzz_denormalize_multiple(element))
 		elif element is Dictionary:
 			# TODO: perhaps check first if it looks like a match or an intermediate container
-			mes.append(bee_denormalize_single(element))
+			mes.append(bzz_denormalize_single(element))
 		else:
 			mes.append(element)
 	return mes
 
 {{!-- UNUSED
-func bee_normalize_fully() -> Dictionary:
+func bzz_normalize_fully() -> Dictionary:
 	return {
 {{#each vars}}
 		"{{name}}": self.{{name}},
