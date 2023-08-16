@@ -145,7 +145,7 @@ func bee_request(
 					error.message = "%s: failed to parse JSON response at line %d.\n%s" % [
 						self.bee_name, parser.get_error_line(), parser.get_error_message()
 					]
-					on_failure.call(error)
+					on_failure.call_deferred(error)
 					return
 				decodedResponse = parser.data
 			else:
@@ -155,13 +155,13 @@ func bee_request(
 				error.message = "%s: mime type `%s' is not supported (yet)" % [
 					self.bee_name, mime
 				]
-				on_failure.call(error)
+				on_failure.call_deferred(error)
 				return
 
-			on_success.call(decodedResponse, responseCode, responseHeaders)
+			on_success.call_deferred(decodedResponse, responseCode, responseHeaders)
 			,
 		func(error):
-			on_failure.call(error)
+			on_failure.call_deferred(error)
 			,
 	)
 
@@ -193,7 +193,7 @@ func bee_do_request_text(
 ):
 	var bee_client = self.bee_try_connect()
 	if bee_client == null:
-		on_failure.call(null)
+		on_failure.call_deferred(null)
 		return
 
 	headers = headers.duplicate(true)
@@ -210,7 +210,7 @@ func bee_do_request_text(
 				error.message = "%s: `%s' is missing required properties %s." % [
 					self.bee_name, body.bee_class_name, missing_properties
 				]
-				on_failure.call(error)
+				on_failure.call_deferred(error)
 				return
 		if body.has_method('bee_normalize'):
 			body_normalized = body.bee_normalize()
@@ -243,7 +243,7 @@ func bee_do_request_text(
 		error.message = "%s: failed to request to path `%s'." % [
 			self.bee_name, path
 		]
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 
 	while bee_client.get_status() == HTTPClient.STATUS_REQUESTING:
@@ -260,7 +260,7 @@ func bee_do_request_text(
 		error.message = "%s: request to `%s' yielded no response whatsoever." % [
 			self.bee_name, path
 		]
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 
 	var response_code := bee_client.get_response_code()
@@ -320,7 +320,7 @@ func bee_do_request_text(
 		error.message += "\n%s" % [
 			bee_format_error_response(response_text)
 		]
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	elif response_code >= 400:
 		var error := {{>partials/api_error_class_name}}.new()
@@ -332,7 +332,7 @@ func bee_do_request_text(
 		error.message += "\n%s" % [
 			bee_format_error_response(response_text)
 		]
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	elif response_code >= 300:
 		var error := {{>partials/api_error_class_name}}.new()
@@ -341,13 +341,13 @@ func bee_do_request_text(
 		error.message = "%s: request to `%s' was redirected with a %d.  We do not support redirects in that client yet." % [
 			self.bee_name, path, response_code
 		]
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 
 	# Should we close ?
 	#bee_client.close()
 
-	on_success.call(response_text, response_code, response_headers)
+	on_success.call_deferred(response_text, response_code, response_headers)
 
 
 func bee_convert_http_method(method: String) -> int:
