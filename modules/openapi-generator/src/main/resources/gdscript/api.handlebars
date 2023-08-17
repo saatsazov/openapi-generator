@@ -55,7 +55,7 @@ func {{operationIdSnakeCase}}(
 		#error.internal_code = ERR_INVALID_PARAMETER
 		error.identifier = "{{operationIdSnakeCase}}.param.validation.max_length"
 		error.message = "Invalid length for `{{paramName}}`, must be smaller than or equal to {{maxLength}}."
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	{{/if}}
 	{{/if}}
@@ -65,7 +65,7 @@ func {{operationIdSnakeCase}}(
 		var error := {{>partials/api_error_class_name}}.new()
 		error.identifier = "{{operationIdSnakeCase}}.param.validation.min_length"
 		error.message = "Invalid length for `{{paramName}}`, must be greater than or equal to {{minLength}}."
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	{{/if}}
 	{{/if}}
@@ -77,7 +77,7 @@ func {{operationIdSnakeCase}}(
 		var error := {{>partials/api_error_class_name}}.new()
 		error.identifier = "{{operationIdSnakeCase}}.param.validation.maximum"
 		error.message = "Invalid value for `{{paramName}}`, must be smaller than{{#unless exclusiveMaximum}} or equal to{{/unless}} {{maximum}}."
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	{{!/if}}
 	{{/if}}
@@ -87,7 +87,7 @@ func {{operationIdSnakeCase}}(
 		var error := {{>partials/api_error_class_name}}.new()
 		error.identifier = "{{operationIdSnakeCase}}.param.validation.minimum"
 		error.message = "Invalid value for `{{paramName}}`, must be greater than{{#unless exclusiveMinimum}} or equal to{{/unless}} {{minimum}}."
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	{{!/if}}
 	{{/if}}
@@ -97,7 +97,7 @@ func {{operationIdSnakeCase}}(
 		var error := {{>partials/api_error_class_name}}.new()
 		error.identifier = "{{operationIdSnakeCase}}.param.validation.max_items"
 		error.message = "Invalid array size for `{{paramName}}`, must hold at most {{maxItems}} elements."
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	{{/if}}
 	{{/if}}
@@ -107,7 +107,7 @@ func {{operationIdSnakeCase}}(
 		var error := {{>partials/api_error_class_name}}.new()
 		error.identifier = "{{operationIdSnakeCase}}.param.validation.min_items"
 		error.message = "Invalid array size for `{{paramName}}`, must hold at least {{minItems}} elements."
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	{{/if}}
 	{{/if}}
@@ -122,7 +122,7 @@ func {{operationIdSnakeCase}}(
 		var error := {{>partials/api_error_class_name}}.new()
 		error.identifier = "{{operationIdSnakeCase}}.param.validation.pattern"
 		error.message = "Invalid value for `{{paramName}}`, must conform to the pattern `{{{pattern}}}`."
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	{{!/if}}
 	{{/if}}
@@ -153,7 +153,7 @@ func {{operationIdSnakeCase}}(
 		var error := {{>partials/api_error_class_name}}.new()
 		error.identifier = "{{operationIdSnakeCase}}.headers.content_type"
 		error.message = "That endpoint only accepts %s as content type(s) and none are supported by this client."
-		on_failure.call(error)
+		on_failure.call_deferred(error)
 		return
 	{{/if}}
 	{{#if produces}}
@@ -194,10 +194,10 @@ func {{operationIdSnakeCase}}(
 			bzz_result = {{>partials/complex_type}}.bee_denormalize_single(bzz_result)
 	{{/if}}
 {{/with}}
-			on_success.call(bzz_result)
+			on_success.call_deferred(bzz_result)
 			,  # ざわ‥
 		func(bzz_error):
-			on_failure.call(bzz_error)
+			on_failure.call_deferred(bzz_error)
 			,  # ざわ‥
 	)
 {{/each}}
