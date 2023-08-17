@@ -193,7 +193,10 @@ func bee_do_request_text(
 ):
 	var bee_client = self.bee_try_connect()
 	if bee_client == null:
-		on_failure.call_deferred(null)
+		var error := {{>partials/api_error_class_name}}.new()
+		error.identifier = "wtf"
+		error.message = "connection null"
+		on_failure.call_deferred(error)
 		return
 
 	headers = headers.duplicate(true)
