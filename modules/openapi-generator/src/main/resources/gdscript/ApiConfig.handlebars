@@ -54,10 +54,8 @@ var bee_client: HTTPClient:
 	set(value):
 		if value.begins_with("https://"):
 			ssl_enabled = true
-			value = value.substr(8)  # "https://".length() == 8
 		elif value.begins_with("http://"):
 			ssl_enabled = false
-			value = value.substr(7)  # "http://".length() == 7
 		host = value
 
 
