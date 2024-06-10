@@ -1,0 +1,6 @@
+    public const contentTypes = [{{#operation}}
+        '{{{operationId}}}' => [{{#consumes}}
+            '{{{mediaType}}}',{{/consumes}}
+        {{^consumes}}
+            'application/json',
+{{/consumes}}        ],{{/operation}}
