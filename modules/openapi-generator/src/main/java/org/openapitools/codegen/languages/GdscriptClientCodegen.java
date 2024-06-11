@@ -41,6 +41,12 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         apiPackage = "Apis";
         modelPackage = "Models";
         // TODO: Fill this out.
+
+        typeMapping = new HashMap<>();
+        typeMapping.put("integer", "int");
+        typeMapping.put("string", "String");
+        typeMapping.put("boolean", "bool");
+        typeMapping.put("array", "Array");
     }
 
     @Override
