@@ -8,8 +8,9 @@ func {{operationIdSnakeCase}}(
 ) -> void:
     var oapi_path := "{{{contextPath}}}{{{path}}}"{{#pathParams}}.replace("{" + "{{baseName}}" + "}", {{{paramName}}}){{/pathParams}}
 
+    var oapi_query = {}
     {{#queryParams}}
-        oapi_query["{{baseName}}"] = {{paramName}}
+    oapi_query["{{baseName}}"] = {{paramName}}
     {{/queryParams}}
 
     var oapi_response: RushRequestResponse = await self.client.{{httpMethod}}(oapi_path)
