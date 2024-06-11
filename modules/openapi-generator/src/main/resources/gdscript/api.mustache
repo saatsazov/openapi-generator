@@ -19,7 +19,7 @@ func {{operationIdSnakeCase}}(
         # Returns a Dictionary converted from JSON, if the response Content-Type is set to "application/json"
         print("Request was successful!")
         print(response.get_parsed_body())
-        on_success(JsonConverter.json_to_class(response.get_parsed_body()), {{returnType}}.new())
+        on_success(JsonConverter.json_to_class(response.get_parsed_body(), {{returnType}}.new()))
     else:
         print("Request failed!")
         print(response.get_http_result_description())
