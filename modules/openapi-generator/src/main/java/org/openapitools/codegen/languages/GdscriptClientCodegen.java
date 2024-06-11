@@ -42,4 +42,9 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         modelPackage = "Models";
         // TODO: Fill this out.
     }
+
+    @Override
+    public String toOperationId(String operationId) {
+        return operationId.replaceFirst("^actions.", "");
+    }
 }

@@ -3,9 +3,8 @@
 var client: RushRequestClient
 
 {{#operation}}
-    {{{operationId}}}
 func {{operationIdSnakeCase}}(
-    {{>partials/api_method_params}}
+{{>partials/api_method_params}}
 ) -> void:
     var oapi_path := "{{{contextPath}}}{{{path}}}"{{#pathParams}}.replace("{" + "{{baseName}}" + "}", {{{paramName}}}){{/pathParams}}
 
