@@ -14,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.openapitools.codegen.utils.StringUtils.camelize;
+
 public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConfig {
     public static final String PROJECT_NAME = "projectName";
 
@@ -40,6 +42,8 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         embeddedTemplateDir = templateDir = "gdscript";
         apiPackage = "Apis";
         modelPackage = "Models";
+        modelNamePrefix = "";
+        modelNameSuffix = "";
         // TODO: Fill this out.
 
         typeMapping = new HashMap<>();
@@ -47,6 +51,10 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         typeMapping.put("string", "String");
         typeMapping.put("boolean", "bool");
         typeMapping.put("array", "Array");
+    }
+
+    public String toModelName(String name) {
+        return camelize(name);
     }
 
     @Override
