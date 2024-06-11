@@ -54,6 +54,7 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         typeMapping.put("string", "String");
         typeMapping.put("boolean", "bool");
         typeMapping.put("array", "Array");
+        typeMapping.put("file", "FileAccess");
     }
 
 //    @Override
