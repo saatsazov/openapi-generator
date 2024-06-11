@@ -1,5 +1,4 @@
 {{#model}}
-    class {{classname}}
-    {{#vars}}'{{name}}' => '{{{dataType}}}'{{^-last}},
-    {{/-last}}{{/vars}}
+class {{classname}}{{#vars}}
+    var {{name}}: {{{dataType}}}{{/vars}}
 {{/model}}
