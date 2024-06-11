@@ -1,31 +1,19 @@
 {{#operations}}class {{classname}}
 
+var client: RushRequestClient
+
 {{#operation}}
     {{{operationId}}}
-    func {{operationIdSnakeCase}}(
+func {{operationIdSnakeCase}}(
     {{>partials/api_method_params}}
-    ):
-
-
+):
+    var response: RushRequestResponse = await client.GET("/587c3de4-d119-4166-bd3a-a5272370a5fd")
+    if response.is_successful():
+        # Returns a Dictionary converted from JSON, if the response Content-Type is set to "application/json"
+        print("Request was successful!")
+        print(response.get_parsed_body())
+    else:
+        print("Request failed!")
+        print(response.get_http_result_description())
 {{/operation}}
 {{/operations}}
-
-func _ready():
-var client: RushRequestClient = RushRequest.create_client({
-"timeout": 10,
-"base_url": "https://run.mocky.io/v3/",
-"headers": {
-"Content-Type": "application/json"
-}
-})
-
-# Makes a GET request
-var response: RushRequestResponse = await client.GET("/587c3de4-d119-4166-bd3a-a5272370a5fd")
-
-if response.is_successful():
-# Returns a Dictionary converted from JSON, if the response Content-Type is set to "application/json"
-print("Request was successful!")
-print(response.get_parsed_body())
-else:
-print("Request failed!")
-print(response.get_http_result_description())
