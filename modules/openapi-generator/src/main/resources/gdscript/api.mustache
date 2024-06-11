@@ -7,7 +7,14 @@ var client: RushRequestClient
 func {{operationIdSnakeCase}}(
     {{>partials/api_method_params}}
 ):
-    var response: RushRequestResponse = await client.GET("/587c3de4-d119-4166-bd3a-a5272370a5fd")
+    var oapi_path := "{{{contextPath}}}{{{path}}}"{{#pathParams}}.replace("{" + "{{baseName}}" + "}", {{{paramName}}}){{/pathParams}}
+
+    {{#queryParams}}
+        oapi_query["{{baseName}}"] = {{paramName}}
+    {{/queryParams}}
+
+    var oapi_response: RushRequestResponse = await self.client.{{httpMethod}}(oapi_path)
+
     if response.is_successful():
         # Returns a Dictionary converted from JSON, if the response Content-Type is set to "application/json"
         print("Request was successful!")
@@ -15,5 +22,6 @@ func {{operationIdSnakeCase}}(
     else:
         print("Request failed!")
         print(response.get_http_result_description())
+
 {{/operation}}
 {{/operations}}
