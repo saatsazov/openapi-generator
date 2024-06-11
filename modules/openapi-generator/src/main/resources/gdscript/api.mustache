@@ -19,10 +19,11 @@ func {{operationIdSnakeCase}}(
         # Returns a Dictionary converted from JSON, if the response Content-Type is set to "application/json"
         print("Request was successful!")
         print(oapi_response.get_parsed_body())
-        on_success(JsonConverter.json_to_class(oapi_response.get_parsed_body(), {{returnType}}.new()))
+        on_success.call(JsonConverter.json_to_class(oapi_response.get_parsed_body(), {{returnType}}.new()))
     else:
         print("Request failed!")
         print(oapi_response.get_http_result_description())
+         on_failure.call()
 
 {{/operation}}
 {{/operations}}

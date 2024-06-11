@@ -1,5 +1,8 @@
 package org.openapitools.codegen.languages;
 
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.openapitools.codegen.*;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.MapProperty;
@@ -53,12 +56,43 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         typeMapping.put("array", "Array");
     }
 
+//    @Override
+//    public  String toParamType(String name) {
+//        return "kek" + name + "lol";
+//    }
     public String toModelName(String name) {
+//        return "kek" + name + "lol";
+
         return camelize(name);
     }
 
     @Override
+    protected void handleMethodResponse(Operation operation, Map<String, Schema> schemas, CodegenOperation op,
+                                        ApiResponse methodResponse) {
+        super.handleMethodResponse(operation, schemas, op, methodResponse, Collections.emptyMap());
+
+        op.returnType = "kek" + op.returnType  + "lol";
+    }
+
+    protected void handleMethodResponse(Operation operation,
+                                        Map<String, Schema> schemas,
+                                        CodegenOperation op,
+                                        ApiResponse methodResponse,
+                                        Map<String, String> importMappings) {
+        super.handleMethodResponse(operation, schemas, op, methodResponse, importMappings);
+
+        op.returnType = camelize(op.returnType);
+
+        // see comment in getTypeDeclaration
+//        if (op.isResponseFile) {
+//            op.returnType = "Buffer";
+//        }
+    }
+
+    @Override
     public String toOperationId(String operationId) {
-        return operationId.replaceFirst("^actions.", "");
+        String s1 = operationId.substring(operationId.indexOf(".") + 1);
+        s1.trim();
+        return s1;
     }
 }
