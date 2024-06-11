@@ -1,0 +1,12 @@
+
+
+{{#model}}
+    {{values}}
+enum {{classname}} = {
+{{#allowableValues}}
+    {{#values}}
+        {{{name}}} = {{{value}}} {{^-last}},
+        {{/-last}}
+    {{/values}}
+{{/allowableValues}}
+{{/model}}

@@ -1,7 +1,2 @@
-{{#models}}
-    {{#model}}
-class {{classname}}
-{{#vars}}'{{name}}' => '{{{dataType}}}'{{^-last}},
-{{/-last}}{{/vars}}
-    {{/model}}
+{{#models}}{{#isEnum}}{{>partials/model_enum}}{{/isEnum}}{{^isEnum}}{{>partials/model_generic}}{{/isEnum}}
 {{/models}}
