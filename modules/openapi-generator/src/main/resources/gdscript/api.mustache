@@ -23,7 +23,7 @@ func {{operationIdSnakeCase}}(
     else:
         print("Request failed!")
         print(oapi_response.get_http_result_description())
-         on_failure.call()
+        on_failure.call()
 
 {{/operation}}
 {{/operations}}
