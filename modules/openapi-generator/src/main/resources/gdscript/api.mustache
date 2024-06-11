@@ -15,14 +15,14 @@ func {{operationIdSnakeCase}}(
 
     var oapi_response: RushRequestResponse = await self.client.{{httpMethod}}(oapi_path)
 
-    if response.is_successful():
+    if oapi_response.is_successful():
         # Returns a Dictionary converted from JSON, if the response Content-Type is set to "application/json"
         print("Request was successful!")
-        print(response.get_parsed_body())
-        on_success(JsonConverter.json_to_class(response.get_parsed_body(), {{returnType}}.new()))
+        print(oapi_response.get_parsed_body())
+        on_success(JsonConverter.json_to_class(oapi_response.get_parsed_body(), {{returnType}}.new()))
     else:
         print("Request failed!")
-        print(response.get_http_result_description())
+        print(oapi_response.get_http_result_description())
 
 {{/operation}}
 {{/operations}}
