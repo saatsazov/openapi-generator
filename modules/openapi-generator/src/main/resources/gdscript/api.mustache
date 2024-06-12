@@ -1,29 +1,53 @@
 {{#operations}}class_name {{classname}}
 
-var client: RushRequestClient
-
 {{#operation}}
 func {{operationIdSnakeCase}}(
 {{>partials/api_method_params}}
-) -> void:
+) -> {{returnType}}:
     var oapi_path := "{{{contextPath}}}{{{path}}}"{{#pathParams}}.replace("{" + "{{baseName}}" + "}", {{{paramName}}}){{/pathParams}}
+    var oapi_request: BaseRequest = Unirest.{{httpMethod}}(oapi_path) \
+        .header("Accept", "application/json")
 
     var oapi_query = {}
     {{#queryParams}}
     oapi_query["{{baseName}}"] = {{paramName}}
     {{/queryParams}}
 
-    var oapi_response: RushRequestResponse = await self.client.{{httpMethod}}(oapi_path)
 
-    if oapi_response.is_successful():
-        # Returns a Dictionary converted from JSON, if the response Content-Type is set to "application/json"
-        print("Request was successful!")
-        print(oapi_response.get_parsed_body())
-        on_success.call(JsonConverter.json_to_class(oapi_response.get_parsed_body(), {{returnType}}.new()))
-    else:
-        print("Request failed!")
-        print(oapi_response.get_http_result_description())
-        on_failure.call()
+    {{#pathParams}}
+        # TODO:
+        #oapi_path =  str_replace(
+        #'{' . '{{baseName}}' . '}',
+        #ObjectSerializer::toPathValue(${{paramName}}),
+    {{/pathParams}}
+
+    {{#formParams}}
+        {{#isFile}}
+            #$multipart = true;
+            #$formParams['{{baseName}}'] = [];
+            #$paramFiles = is_array(${{paramName}}) ? ${{paramName}} : [${{paramName}}];
+            #foreach ($paramFiles as $paramFile) {
+            #$formParams['{{baseName}}'][] = \GuzzleHttp\Psr7\Utils::tryFopen(
+            #ObjectSerializer::toFormValue($paramFile),
+            #'rb'
+            #);
+            #}
+        {{/isFile}}
+        {{^isFile}}
+            #$formParams['{{baseName}}'] = ObjectSerializer::toFormValue(${{paramName}});
+        {{/isFile}}
+        }
+    {{/formParams}}
+
+
+
+    {{#bodyParams}}
+    oapi_request.body({{paramName}})
+    {{/bodyParams}}
+
+    var oapi_response = await oapi_request.as_object({{returnType}}.new())
+
+    return oapi_response.get_body()
 
 {{/operation}}
 {{/operations}}

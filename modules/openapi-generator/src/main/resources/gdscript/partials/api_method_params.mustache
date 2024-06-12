@@ -1,5 +1,4 @@
 {{#allParams}}
     {{paramName}}{{#dataType}}: {{{dataType}}}{{/dataType}}{{^required}} = {{#defaultValue}}{{{defaultValue}}}{{/defaultValue}}{{^defaultValue}}null{{/defaultValue}}{{/required}},
 {{/allParams}}
-    on_success: Callable = Callable(),  # func(response: {{returnType}})
-    on_failure: Callable = Callable(),  # func(error)
+    on_failure: Callable = Callable(),  # func(error: TODO)
