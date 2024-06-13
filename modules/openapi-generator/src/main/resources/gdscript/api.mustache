@@ -46,6 +46,11 @@ func {{operationIdSnakeCase}}(
     {{/bodyParams}}
 
     var oapi_response = await oapi_request.as_object({{returnType}}.new())
+    if oapi_response.error != null:
+        print("errorResponse:", oapi_response.error)
+        if on_failure != null:
+            on_failure.call()
+        return null
 
     return oapi_response.get_body()
 
