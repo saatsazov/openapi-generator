@@ -3,7 +3,7 @@
 {{#operation}}
 func {{operationIdSnakeCase}}(
 {{>partials/api_method_params}}
-) -> {{returnType}}:
+) -> ObjectResponse:
     var oapi_path := "{{{contextPath}}}{{{path}}}"{{#pathParams}}.replace("{" + "{{baseName}}" + "}", {{{paramName}}}){{/pathParams}}
     var oapi_request: BaseRequest = Unirest.{{httpMethod}}(oapi_path) \
         .header("Accept", "application/json")
@@ -46,13 +46,8 @@ func {{operationIdSnakeCase}}(
     {{/bodyParams}}
 
     var oapi_response = await oapi_request.as_object({{returnType}}.new())
-    if oapi_response.error != null:
-        print("errorResponse:", oapi_response.error)
-        if on_failure != Callable():
-            on_failure.call(oapi_response.error)
-        return null
 
-    return oapi_response.get_body()
+    return oapi_response
 
 {{/operation}}
 {{/operations}}
