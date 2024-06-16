@@ -51,6 +51,7 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
 
         typeMapping = new HashMap<>();
         typeMapping.put("integer", "int");
+        typeMapping.put("number", "float");
         typeMapping.put("string", "String");
         typeMapping.put("boolean", "bool");
         typeMapping.put("array", "Array");
