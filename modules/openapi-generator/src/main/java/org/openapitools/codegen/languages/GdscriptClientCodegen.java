@@ -14,6 +14,7 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
+import org.openapitools.codegen.utils.ModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,9 +55,11 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         typeMapping.put("number", "float");
         typeMapping.put("string", "String");
         typeMapping.put("boolean", "bool");
-        typeMapping.put("array", "Array");
+//        typeMapping.put("array", "Array");
         typeMapping.put("file", "FileAccess");
         typeMapping.put("DateTime", "String");
+
+        instantiationTypes = new HashMap<>();
     }
 
 //    @Override
@@ -91,6 +94,26 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
 //            op.returnType = "Buffer";
 //        }
     }
+
+//    @Override
+//    public String toParamName(String name) {
+//        return  super.toParamName(name);
+//    }
+    @Override
+    public String getTypeDeclaration(Schema schema) {
+        if(ModelUtils.isArraySchema(schema)) {
+            String complexType = getTypeDeclaration(ModelUtils.getSchemaItems(schema));
+            StringBuilder sb = new StringBuilder("Array[");
+            sb.append(complexType);
+            return sb.append("]").toString();
+        }
+
+    return  super.getTypeDeclaration(schema);
+    }
+
+//    public String getTypeDeclaration(String name) {
+//        return name;
+//    }
 
     @Override
     public String toOperationId(String operationId) {
