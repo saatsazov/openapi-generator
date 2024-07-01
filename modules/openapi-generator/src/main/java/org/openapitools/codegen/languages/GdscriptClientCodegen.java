@@ -2,6 +2,7 @@ package org.openapitools.codegen.languages;
 
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.openapitools.codegen.*;
 import io.swagger.models.properties.ArrayProperty;
@@ -56,6 +57,7 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         typeMapping.put("string", "String");
         typeMapping.put("boolean", "bool");
 //        typeMapping.put("array", "Array");
+//        typeMapping.put("map", "Dictionary");
         typeMapping.put("file", "FileAccess");
         typeMapping.put("DateTime", "String");
 
@@ -106,6 +108,19 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
             StringBuilder sb = new StringBuilder("Array[");
             sb.append(complexType);
             return sb.append("]").toString();
+        }
+        if(ModelUtils.isMapSchema(schema)) {
+            Schema inner = ModelUtils.getAdditionalProperties(schema);
+            if (inner == null) {
+//                LOGGER.warn("{}(map property) does not have a proper inner type defined. Default to string", p.getName());
+                inner = new StringSchema().description("TODO default missing map inner type to string");
+            }
+            return "Dictionary";
+//            return getSchemaType(schema) + "<string," + getTypeDeclaration(inner) + ">";
+//            String complexType = getTypeDeclaration(ModelUtils.getSchemaItems(schema));
+//            StringBuilder sb = new StringBuilder("Dictionary[");
+//            sb.append(complexType);
+//            return sb.append("]").toString();
         }
 
     return  super.getTypeDeclaration(schema);
