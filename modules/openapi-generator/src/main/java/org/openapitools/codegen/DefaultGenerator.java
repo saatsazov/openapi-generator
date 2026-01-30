@@ -502,10 +502,14 @@ public class DefaultGenerator implements Generator {
                     LOGGER.info("Model {} not generated since x-internal is set to true", name);
                     continue;
                 } else if (ModelUtils.isFreeFormObject(schema)) { // check to see if it's a free-form object
-                    if (!ModelUtils.shouldGenerateFreeFormObjectModel(name, config)) {
-                        LOGGER.info("Model {} not generated since it's a free-form object", name);
-                        continue;
-                    }
+
+                // I Don't like to comment it here, but openapi-generator doesn't posses extensible architecture
+                // I need to generate emmpy models and this seems the only solution
+
+//                    if (!ModelUtils.shouldGenerateFreeFormObjectModel(name, config)) {
+//                        LOGGER.info("Model {} not generated since it's a free-form object", name);
+//                        continue;
+//                    }
                 } else if (ModelUtils.isMapSchema(schema)) { // check to see if it's a "map" model
                     if (!ModelUtils.shouldGenerateMapModel(schema)) {
                         // schema without property, i.e. alias to map
