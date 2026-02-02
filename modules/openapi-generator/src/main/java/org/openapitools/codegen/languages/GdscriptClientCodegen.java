@@ -60,6 +60,7 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
 //        typeMapping.put("map", "Dictionary");
         typeMapping.put("file", "FileAccess");
         typeMapping.put("DateTime", "String");
+        typeMapping.put("UUID", "String");
 
         instantiationTypes = new HashMap<>();
     }
