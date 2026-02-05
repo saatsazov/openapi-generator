@@ -112,19 +112,16 @@ public class GdscriptClientCodegen extends DefaultCodegen implements CodegenConf
         }
         if(ModelUtils.isMapSchema(schema)) {
             Schema inner = ModelUtils.getAdditionalProperties(schema);
-            if (inner == null) {
-//                LOGGER.warn("{}(map property) does not have a proper inner type defined. Default to string", p.getName());
-                inner = new StringSchema().description("TODO default missing map inner type to string");
+            String complexType = getTypeDeclaration(inner);
+            if (complexType.equals("AnyType")) {
+                return "Dictionary";
             }
-            return "Dictionary";
-//            return getSchemaType(schema) + "<string," + getTypeDeclaration(inner) + ">";
-//            String complexType = getTypeDeclaration(ModelUtils.getSchemaItems(schema));
-//            StringBuilder sb = new StringBuilder("Dictionary[");
-//            sb.append(complexType);
-//            return sb.append("]").toString();
+            StringBuilder sb = new StringBuilder("Dictionary[String, ");
+            sb.append(complexType);
+            return sb.append("]").toString();
         }
 
-    return  super.getTypeDeclaration(schema);
+        return  super.getTypeDeclaration(schema);
     }
 
 //    public String getTypeDeclaration(String name) {
